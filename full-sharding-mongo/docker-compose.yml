@@ -1,0 +1,199 @@
+version: "3.1"
+
+services:
+  #this is a shard-cluster
+      #shard 1 ---------------------------------------------------------------------------------------
+  mongoshard1.1:
+    container_name: mongoshard1-1
+    build:
+      dockerfile: ./dockerfile
+      context: .
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/shard-server/shard1/data1:/data/db
+    ports:
+      - "28100:27017" 
+    command: mongod --replSet "shard1" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --shardsvr 
+
+  mongoshard1.2:
+    container_name: mongoshard1-2
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/shard-server/shard1/data2:/data/db
+    ports:
+      - "28101:27017" 
+    command: mongod --replSet "shard1" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --shardsvr 
+
+  mongoshard1.3:
+    container_name: mongoshard1-3
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/shard-server/shard1/data3:/data/db
+    ports:
+      - "28102:27017" 
+    command: mongod --replSet "shard1" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --shardsvr 
+
+      #shard 2 ---------------------------------------------------------------------------------------
+  mongoshard2.1:
+    container_name: mongoshard2-1
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/shard-server/shard2/data1:/data/db
+    ports:
+      - "28200:27017" 
+    command: mongod --replSet "shard2" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --shardsvr 
+
+  mongoshard2.2:
+    container_name: mongoshard2-2
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/shard-server/shard2/data2:/data/db
+    ports:
+      - "28201:27017" 
+    command: mongod --replSet "shard2" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --shardsvr 
+
+  mongoshard2.3:
+    container_name: mongoshard2-3
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/shard-server/shard2/data3:/data/db
+    ports:
+      - "28202:27017" 
+    command: mongod --replSet "shard2" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --shardsvr 
+
+      #mongocfgsvr
+      #cfs1  ---------------------------------------------------------------------------------------
+
+  mongocfgs1:
+    container_name: configsvrmongo1
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/config-server/data0:/data/db
+    ports:
+      - "28000:27017" 
+    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+
+      #cfs2  ---------------------------------------------------------------------------------------
+
+  mongocfgs2:
+    container_name: configsvrmongo2
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/config-server/data1:/data/db
+    ports:
+      - "28001:27017" 
+    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+
+      #cfs1  ---------------------------------------------------------------------------------------
+
+  mongocfgs3:
+    container_name: configsvrmongo3
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/config-server/data2:/data/db
+    ports:
+      - "28002:27017" 
+    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+
+      #mongosRouter
+      #router1  ---------------------------------------------------------------------------------------
+  mongosrouter1:
+    container_name: mongosrouter1
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    depends_on:
+      - mongocfgs1
+      - mongocfgs2
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    ports:
+      - "29000:27017" 
+    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017  --port 27017  
+
+      #router2  ---------------------------------------------------------------------------------------
+      
+  mongosrouter2:
+    container_name: mongosrouter2
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    depends_on:
+      - mongocfgs1
+      - mongocfgs2
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    ports:
+      - "29001:27017" 
+    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017  --port 27017  
+
+
+
+networks:
+  mongoshard:

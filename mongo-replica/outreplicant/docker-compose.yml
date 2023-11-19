@@ -1,0 +1,25 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+  mongomain:
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    ports:
+      - "27013:27017"
+    volumes:
+      - subnorth001:/data/db
+    networks:
+      - mongoReplicant-north
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs-north  --oplogSize 128 
+
+
+networks:
+  mongoReplicant-north:
+volumes:
+  subnorth001:

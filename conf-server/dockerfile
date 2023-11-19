@@ -1,0 +1,15 @@
+FROM mongo 
+
+COPY ./key.keyFile /etc/mongodb/
+
+RUN chown 999 /etc/mongodb/key.keyFile
+RUN chmod 400 /etc/mongodb/key.keyFile
+RUN chown 999 /data/*
+
+
+
+
+
+
+
+

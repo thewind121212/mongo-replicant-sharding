@@ -1,0 +1,18 @@
+FROM mongo 
+
+COPY ./pwd.keyFile /etc/mongodb/
+
+RUN chown 999 /etc/mongodb/pwd.keyFile
+RUN chmod 400 /etc/mongodb/pwd.keyFile
+RUN chown 999 /data/*
+
+WORKDIR /srv/mongodb/rs0-0  
+RUN chown mongodb:mongodb /srv/mongodb/rs0-0
+
+
+
+
+RUN ls -a /etc/mongodb
+
+
+

@@ -1,0 +1,59 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+  mongomain:
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    ports:
+      - "27010:27017"
+    volumes:
+      - main000:/data/db
+    networks:
+      - mongoReplicant-1
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-0  --oplogSize 128 
+
+  mongosub1:
+    build:
+      context: .
+      dockerfile: ./dockerfilesub1
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    ports:
+      - "27011:27017"
+    volumes:
+      - sub001:/data/db
+    networks:
+      - mongoReplicant-1
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-1  --oplogSize 128 
+
+  mongosub2:
+    build:
+      context: .
+      dockerfile: ./dockerfilesub2
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    ports:
+      - "27012:27017"
+    volumes:
+      - sub002:/data/db
+    networks:
+      - mongoReplicant-1
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-2  --oplogSize 128 
+  
+
+networks:
+  mongoReplicant-1:
+volumes:
+  main000:
+  sub001:
+  sub002:

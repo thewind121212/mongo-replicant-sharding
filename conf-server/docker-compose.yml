@@ -1,0 +1,55 @@
+version: "3.1"
+
+services:
+  mongocfgs:
+    container_name: configsvrmongo1
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/config-server/data0:/data/db
+    ports:
+      - "28000:27017" 
+    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+
+  mongocfgs1:
+    container_name: configsvrmongo2
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/config-server/data1:/data/db
+    ports:
+      - "28001:27017" 
+    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+
+  mongocfgs2:
+    container_name: configsvrmongo3
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
+    networks:
+      - mongoshard
+    volumes:
+      - /mongo-shard/config-server/data2:/data/db
+    ports:
+      - "28002:27017" 
+    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+
+networks:
+  mongoshard:
+    external: true
+    name: mongoshardnet
