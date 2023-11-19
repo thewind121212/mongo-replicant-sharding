@@ -172,7 +172,7 @@ services:
       - mongoshard
     ports:
       - "29000:27017" 
-    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017  --port 27017  
+    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017 --keyFile /etc/mongodb/key.keyFile  --port 27017  
 
       #router2  ---------------------------------------------------------------------------------------
       
@@ -191,7 +191,7 @@ services:
       - mongoshard
     ports:
       - "29001:27017" 
-    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017  --port 27017  
+    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017 --keyFile /etc/mongodb/key.keyFile  --port 27017  
 
 
 

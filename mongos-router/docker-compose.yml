@@ -6,28 +6,23 @@ services:
     build:
       context: .
       dockerfile: ./dockerfile
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
     networks:
       - mongoshard
     ports:
       - "29000:27017" 
-    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017  --port 27017  
+    command: mongos --configdb "mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017" --keyFile /etc/mongodb/key.keyFile   --port 27017  
 
   mongosrouter2:
     container_name: mongosrouter2
     build:
       context: .
       dockerfile: ./dockerfile
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=linhporo1
     networks:
       - mongoshard
     ports:
-      - "29001:27017" 
-    command: mongos --configdb mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017  --port 27017  
+      - "29100:27017" 
+    command: mongos --configdb "mongocfgs/mongocfgs:27017,mongocfgs1:27017,mongocfgs2:27017" --keyFile /etc/mongodb/key.keyFile   --port 27017  
+
 
 networks:
   mongoshard:

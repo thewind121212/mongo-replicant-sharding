@@ -15,7 +15,10 @@ services:
       - /mongo-shard/config-server/data0:/data/db
     ports:
       - "28000:27017" 
-    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+    expose:
+      - "27018"
+      - "27019"
+    command: mongod --configsvr --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --bind_ip 0.0.0.0 --dbpath /data/db --port 27017  
 
   mongocfgs1:
     container_name: configsvrmongo2
@@ -31,7 +34,10 @@ services:
       - /mongo-shard/config-server/data1:/data/db
     ports:
       - "28001:27017" 
-    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+    expose:
+      - "27018"
+      - "27019"
+    command: mongod --configsvr --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --bind_ip 0.0.0.0 --dbpath /data/db --port 27017  
 
   mongocfgs2:
     container_name: configsvrmongo3
@@ -47,7 +53,10 @@ services:
       - /mongo-shard/config-server/data2:/data/db
     ports:
       - "28002:27017" 
-    command: mongod --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --dbpath /data/db --port 27017 --configsvr 
+    expose:
+      - "27018"
+      - "27019"
+    command: mongod --configsvr  --replSet "mongocfgs" --keyFile /etc/mongodb/key.keyFile --bind_ip 0.0.0.0 --dbpath /data/db --port 27017 
 
 networks:
   mongoshard:

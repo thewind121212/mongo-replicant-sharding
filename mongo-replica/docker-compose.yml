@@ -16,7 +16,7 @@ services:
       - main000:/data/db
     networks:
       - mongoReplicant-1
-    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-0  --oplogSize 128 
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/key.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-0  --oplogSize 128 
 
   mongosub1:
     build:
@@ -32,7 +32,7 @@ services:
       - sub001:/data/db
     networks:
       - mongoReplicant-1
-    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-1  --oplogSize 128 
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/key.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-1  --oplogSize 128 
 
   mongosub2:
     build:
@@ -48,7 +48,7 @@ services:
       - sub002:/data/db
     networks:
       - mongoReplicant-1
-    command: mongod --replSet "rs0" --keyFile /etc/mongodb/pwd.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-2  --oplogSize 128 
+    command: mongod --replSet "rs0" --keyFile /etc/mongodb/key.keyFile --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-2  --oplogSize 128 
   
 
 networks:
